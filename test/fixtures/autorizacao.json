@@ -1,0 +1,125 @@
+{
+  "aluno": {
+    "nome": "Beatriz Costa",
+    "email": "beatriz.costa@teste.com",
+    "matricula": "2026020",
+    "senha": "senha123"
+  },
+  "disciplinaMatriculada": "disciplina-matematica",
+  "outroAlunoId": "aluno-ana-souza",
+  "casos": [
+    {
+      "descricao": "aluno lista os alunos da área do admin",
+      "perfil": "aluno",
+      "metodo": "get",
+      "rota": "/api/admin/alunos",
+      "statusEsperado": 403,
+      "erroEsperado": "Você não tem permissão para acessar este recurso."
+    },
+    {
+      "descricao": "aluno cadastra outro aluno",
+      "perfil": "aluno",
+      "metodo": "post",
+      "rota": "/api/admin/alunos",
+      "corpo": { "nome": "Intruso", "email": "intruso@teste.com", "matricula": "9999", "senha": "123456" },
+      "statusEsperado": 403,
+      "erroEsperado": "Você não tem permissão para acessar este recurso."
+    },
+    {
+      "descricao": "aluno remove o próprio cadastro",
+      "perfil": "aluno",
+      "metodo": "delete",
+      "rota": "/api/admin/alunos/{alunoId}",
+      "statusEsperado": 403,
+      "erroEsperado": "Você não tem permissão para acessar este recurso."
+    },
+    {
+      "descricao": "aluno se matricula sozinho em outra disciplina",
+      "perfil": "aluno",
+      "metodo": "post",
+      "rota": "/api/admin/disciplinas/disciplina-historia/matriculas",
+      "corpo": { "alunoId": "{alunoId}" },
+      "statusEsperado": 403,
+      "erroEsperado": "Você não tem permissão para acessar este recurso."
+    },
+    {
+      "descricao": "aluno lança a própria nota",
+      "perfil": "aluno",
+      "metodo": "post",
+      "rota": "/api/admin/notas",
+      "corpo": { "alunoId": "{alunoId}", "disciplinaId": "disciplina-matematica", "valor": 10, "tipo": "prova" },
+      "statusEsperado": 403,
+      "erroEsperado": "Você não tem permissão para acessar este recurso."
+    },
+    {
+      "descricao": "aluno corrige um trabalho",
+      "perfil": "aluno",
+      "metodo": "put",
+      "rota": "/api/admin/trabalhos/trabalho-ana-lista-exercicios-1",
+      "corpo": { "status": "corrigido", "nota": 10 },
+      "statusEsperado": 403,
+      "erroEsperado": "Você não tem permissão para acessar este recurso."
+    },
+    {
+      "descricao": "aluno consulta as disciplinas de outro aluno",
+      "perfil": "aluno",
+      "metodo": "get",
+      "rota": "/api/alunos/{outroAlunoId}/disciplinas",
+      "statusEsperado": 403,
+      "erroEsperado": "Você só pode acessar os seus próprios dados."
+    },
+    {
+      "descricao": "aluno consulta as notas de outro aluno",
+      "perfil": "aluno",
+      "metodo": "get",
+      "rota": "/api/alunos/{outroAlunoId}/notas",
+      "statusEsperado": 403,
+      "erroEsperado": "Você só pode acessar os seus próprios dados."
+    },
+    {
+      "descricao": "aluno consulta os trabalhos de outro aluno",
+      "perfil": "aluno",
+      "metodo": "get",
+      "rota": "/api/alunos/{outroAlunoId}/trabalhos",
+      "statusEsperado": 403,
+      "erroEsperado": "Você só pode acessar os seus próprios dados."
+    },
+    {
+      "descricao": "aluno entrega trabalho em nome de outro aluno",
+      "perfil": "aluno",
+      "metodo": "post",
+      "rota": "/api/alunos/{outroAlunoId}/trabalhos",
+      "corpo": { "disciplinaId": "disciplina-matematica", "titulo": "Trabalho de outra pessoa" },
+      "statusEsperado": 403,
+      "erroEsperado": "Você só pode acessar os seus próprios dados."
+    },
+    {
+      "descricao": "aluno consulta as próprias disciplinas",
+      "perfil": "aluno",
+      "metodo": "get",
+      "rota": "/api/alunos/{alunoId}/disciplinas",
+      "statusEsperado": 200
+    },
+    {
+      "descricao": "aluno consulta os próprios trabalhos",
+      "perfil": "aluno",
+      "metodo": "get",
+      "rota": "/api/alunos/{alunoId}/trabalhos",
+      "statusEsperado": 200
+    },
+    {
+      "descricao": "admin consulta os trabalhos de qualquer aluno",
+      "perfil": "admin",
+      "metodo": "get",
+      "rota": "/api/alunos/{alunoId}/trabalhos",
+      "statusEsperado": 200
+    },
+    {
+      "descricao": "admin consulta as disciplinas de qualquer aluno",
+      "perfil": "admin",
+      "metodo": "get",
+      "rota": "/api/alunos/{outroAlunoId}/disciplinas",
+      "statusEsperado": 200
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "aluno": {
+    "nome": "Rafael Almeida",
+    "email": "rafael.almeida@teste.com",
+    "matricula": "2026030",
+    "senha": "senha123"
+  },
+  "disciplinaId": "disciplina-programacao-web",
+  "trabalho": {
+    "titulo": "Portfólio pessoal",
+    "descricao": "Site pessoal com HTML, CSS e JavaScript."
+  },
+  "notas": [
+    {
+      "classe": "abaixo do mínimo",
+      "valor": -0.01,
+      "statusEsperado": 400
+    },
+    {
+      "classe": "no mínimo",
+      "valor": 0,
+      "statusEsperado": 200
+    },
+    {
+      "classe": "logo acima do mínimo",
+      "valor": 0.01,
+      "statusEsperado": 200
+    },
+    {
+      "classe": "valor intermediário com decimal",
+      "valor": 7.5,
+      "statusEsperado": 200
+    },
+    {
+      "classe": "logo abaixo do máximo",
+      "valor": 9.99,
+      "statusEsperado": 200
+    },
+    {
+      "classe": "no máximo",
+      "valor": 10,
+      "statusEsperado": 200
+    },
+    {
+      "classe": "acima do máximo",
+      "valor": 10.01,
+      "statusEsperado": 400
+    },
+    {
+      "classe": "muito acima do máximo",
+      "valor": 100,
+      "statusEsperado": 400
+    },
+    {
+      "classe": "número em texto",
+      "valor": "8",
+      "statusEsperado": 400
+    },
+    {
+      "classe": "texto",
+      "valor": "abc",
+      "statusEsperado": 400
+    },
+    {
+      "classe": "booleano",
+      "valor": true,
+      "statusEsperado": 400
+    }
+  ],
+  "erroNota": "O campo \"nota\" deve ser um número entre 0 e 10.",
+  "statusInvalidos": [
+    {
+      "classe": "status inexistente",
+      "valor": "aprovado"
+    },
+    {
+      "classe": "status válido em maiúsculas",
+      "valor": "CORRIGIDO"
+    },
+    {
+      "classe": "texto vazio",
+      "valor": ""
+    },
+    {
+      "classe": "número",
+      "valor": 123
+    }
+  ],
+  "erroStatus": "O campo \"status\" deve ser um dos seguintes: entregue, em_correcao, corrigido.",
+  "transicoes": [
+    {
+      "status": "em_correcao"
+    },
+    {
+      "status": "corrigido",
+      "nota": 9.5,
+      "feedback": "Ótimo trabalho, layout bem organizado."
+    }
+  ],
+  "filtros": [
+    {
+      "descricao": "somente pelo aluno",
+      "query": {
+        "alunoId": "{alunoId}"
+      },
+      "quantidade": 1
+    },
+    {
+      "descricao": "aluno + status atual (corrigido)",
+      "query": {
+        "alunoId": "{alunoId}",
+        "status": "corrigido"
+      },
+      "quantidade": 1
+    },
+    {
+      "descricao": "aluno + outro status (entregue)",
+      "query": {
+        "alunoId": "{alunoId}",
+        "status": "entregue"
+      },
+      "quantidade": 0
+    },
+    {
+      "descricao": "aluno + disciplina do trabalho",
+      "query": {
+        "alunoId": "{alunoId}",
+        "disciplinaId": "disciplina-programacao-web"
+      },
+      "quantidade": 1
+    },
+    {
+      "descricao": "aluno + disciplina sem trabalho",
+      "query": {
+        "alunoId": "{alunoId}",
+        "disciplinaId": "disciplina-matematica"
+      },
+      "quantidade": 0
+    },
+    {
+      "descricao": "aluno + disciplina + status (os três juntos)",
+      "query": {
+        "alunoId": "{alunoId}",
+        "disciplinaId": "disciplina-programacao-web",
+        "status": "corrigido"
+      },
+      "quantidade": 1
+    },
+    {
+      "descricao": "status + disciplina + aluno (ordem invertida)",
+      "query": {
+        "status": "corrigido",
+        "disciplinaId": "disciplina-programacao-web",
+        "alunoId": "{alunoId}"
+      },
+      "quantidade": 1
+    }
+  ]
+}

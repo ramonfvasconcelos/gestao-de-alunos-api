@@ -14,8 +14,20 @@
       "erroEsperado": "Os campos \"disciplinaId\" e \"titulo\" são obrigatórios."
     },
     {
+      "descricao": "o título vier vazio",
+      "corpo": { "disciplinaId": "disciplina-matematica", "titulo": "" },
+      "statusEsperado": 400,
+      "erroEsperado": "Os campos \"disciplinaId\" e \"titulo\" são obrigatórios."
+    },
+    {
       "descricao": "a disciplina não for informada",
       "corpo": { "titulo": "Trabalho sem disciplina" },
+      "statusEsperado": 400,
+      "erroEsperado": "Os campos \"disciplinaId\" e \"titulo\" são obrigatórios."
+    },
+    {
+      "descricao": "o corpo vier vazio",
+      "corpo": {},
       "statusEsperado": 400,
       "erroEsperado": "Os campos \"disciplinaId\" e \"titulo\" são obrigatórios."
     },
@@ -30,6 +42,30 @@
       "corpo": { "disciplinaId": "disciplina-inexistente", "titulo": "Trabalho Fantasma" },
       "statusEsperado": 404,
       "erroEsperado": "Disciplina com id \"disciplina-inexistente\" não encontrada."
+    },
+    {
+      "descricao": "o título tiver somente espaços",
+      "corpo": { "disciplinaId": "disciplina-matematica", "titulo": "   " },
+      "statusEsperado": 400,
+      "bugConhecido": "BUG-03"
+    },
+    {
+      "descricao": "a disciplina vier como objeto em vez de texto",
+      "corpo": { "disciplinaId": { "codigo": "MAT101" }, "titulo": "Tipo incorreto" },
+      "statusEsperado": 400,
+      "bugConhecido": "BUG-01"
+    },
+    {
+      "descricao": "a disciplina vier como lista em vez de texto",
+      "corpo": { "disciplinaId": ["disciplina-matematica"], "titulo": "Tipo incorreto" },
+      "statusEsperado": 400,
+      "bugConhecido": "BUG-01"
+    },
+    {
+      "descricao": "o corpo for um JSON malformado",
+      "corpoBruto": "{\"titulo\": ",
+      "statusEsperado": 400,
+      "bugConhecido": "BUG-02"
     }
   ]
 }

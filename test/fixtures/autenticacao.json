@@ -1,0 +1,72 @@
+{
+  "login": [
+    {
+      "descricao": "o e-mail não for informado",
+      "corpo": { "senha": "admin123" },
+      "statusEsperado": 400,
+      "erroEsperado": "Os campos \"email\" e \"senha\" são obrigatórios."
+    },
+    {
+      "descricao": "a senha não for informada",
+      "corpo": { "email": "admin@escola.com" },
+      "statusEsperado": 400,
+      "erroEsperado": "Os campos \"email\" e \"senha\" são obrigatórios."
+    },
+    {
+      "descricao": "o corpo vier vazio",
+      "corpo": {},
+      "statusEsperado": 400,
+      "erroEsperado": "Os campos \"email\" e \"senha\" são obrigatórios."
+    },
+    {
+      "descricao": "o usuário não existir",
+      "corpo": { "email": "ninguem@escola.com", "senha": "admin123" },
+      "statusEsperado": 401,
+      "erroEsperado": "E-mail ou senha inválidos."
+    },
+    {
+      "descricao": "a senha estiver incorreta",
+      "corpo": { "email": "admin@escola.com", "senha": "senha-incorreta" },
+      "statusEsperado": 401,
+      "erroEsperado": "E-mail ou senha inválidos."
+    },
+    {
+      "descricao": "a senha tiver um espaço a mais no final",
+      "corpo": { "email": "admin@escola.com", "senha": "admin123 " },
+      "statusEsperado": 401,
+      "erroEsperado": "E-mail ou senha inválidos."
+    }
+  ],
+  "tokens": [
+    {
+      "descricao": "o cabeçalho Authorization não for enviado",
+      "authorization": null,
+      "statusEsperado": 401,
+      "erroEsperado": "Token de autenticação não informado."
+    },
+    {
+      "descricao": "o token vier sem o prefixo Bearer",
+      "authorization": "{token}",
+      "statusEsperado": 401,
+      "erroEsperado": "Token de autenticação não informado."
+    },
+    {
+      "descricao": "o token for adulterado",
+      "authorization": "Bearer {token}x",
+      "statusEsperado": 401,
+      "erroEsperado": "Token de autenticação inválido ou expirado."
+    },
+    {
+      "descricao": "o token estiver expirado",
+      "authorization": "Bearer {tokenExpirado}",
+      "statusEsperado": 401,
+      "erroEsperado": "Token de autenticação inválido ou expirado."
+    },
+    {
+      "descricao": "o token for assinado com outro segredo",
+      "authorization": "Bearer {tokenOutroSegredo}",
+      "statusEsperado": 401,
+      "erroEsperado": "Token de autenticação inválido ou expirado."
+    }
+  ]
+}

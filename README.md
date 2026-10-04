@@ -264,30 +264,30 @@ curl -X POST http://localhost:3000/api/alunos/aluno-ana-souza/trabalhos \
 ## Testes automatizados
 
 Testes de API com **Mocha**, **Supertest** e **Chai**, rodando na pipeline do **GitHub Actions**
-(`.github/workflows/tests.yml`) a cada push ou pull request na `main`.
+(`.github/workflows/tests.yml`) a cada push ou pull request na `main`, com relatório de cobertura (c8).
 
 ```bash
-cp .env.example .env   # variáveis usadas pelos testes (carregadas com dotenv)
-npm test
+cp .env.example .env     # variáveis usadas pelos testes (carregadas com dotenv)
+npm test                 # roda a suíte
+npm run test:coverage    # roda a suíte e mede a cobertura (relatório em coverage/index.html)
 ```
 
 Estrutura:
 
 ```
 test/
-  auth.test.js                    # login do admin (sucesso e senha inválida)
-  entregaTrabalho.test.js         # fluxo: login admin -> cadastra aluno -> matricula -> login aluno -> entrega trabalho
-  entregaTrabalhoInvalida.test.js # entregas inválidas (400, 404, 409, 403, 401)
+  entregaTrabalho.test.js         # fluxo: login admin -> cadastra -> matricula -> login aluno -> entrega -> consistência
+  entregaTrabalhoInvalida.test.js # entregas inválidas, tipos incorretos e aluno removido
+  correcaoTrabalho.test.js        # valor limite da nota, status, transição de estado e filtros
+  autorizacao.test.js             # matriz de permissões aluno x admin
+  auth.test.js                    # login (partições de credenciais) e variações de token
+  cadastroAluno.test.js           # obrigatoriedade, duplicidade e formato no cadastro
+  rotas.test.js                   # rota raiz, 404 e formato dos erros
   fixtures/                       # massa de dados em JSON (Data-Driven Testing)
-    entregas.json
-    entregas-invalidas.json
-  helpers/
-    auth.helper.js                # login de Admin e de Aluno
-    dados.helper.js               # leitura dos JSON e geração de dados únicos
-  support/
-    setup.js                      # carrega o .env (dotenv)
-    hooks.js                      # fecha a conexão com o MongoDB ao final da suíte
+  helpers/                        # login de Admin/Aluno, setup e limpeza de dados
+  support/                        # dotenv e root hooks do Mocha
 ```
 
-Para adicionar um novo cenário de entrega, basta incluir um novo objeto em
-`test/fixtures/entregas.json` — o teste é gerado automaticamente.
+Para adicionar um cenário, basta incluir um objeto no JSON correspondente em `test/fixtures/`.
+Casos marcados com `"bugConhecido"` documentam defeitos encontrados na API: aparecem como
+**pendentes** no Mocha e não quebram a pipeline. Ao corrigir o defeito, remova o campo e o teste passa a rodar.

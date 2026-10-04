@@ -1,4 +1,5 @@
 import request from 'supertest';
+import jwt from 'jsonwebtoken';
 import app from '../../src/app.js';
 
 /**
@@ -22,4 +23,26 @@ export async function loginAdmin() {
  */
 export async function loginAluno(email, senha) {
   return login(email, senha);
+}
+
+/**
+ * Atalho para quando o teste só precisa do token do admin (setup),
+ * e não está validando o login em si.
+ */
+export async function tokenAdmin() {
+  const resposta = await loginAdmin();
+  if (resposta.status !== 200) {
+    throw new Error(`Setup falhou: login do admin retornou ${resposta.status}`);
+  }
+  return resposta.body.token;
+}
+
+/**
+ * Gera um token assinado com o JWT_SECRET do .env, mas já expirado.
+ * Serve para testar a rejeição de sessões vencidas sem esperar 8 horas.
+ */
+export function gerarTokenExpirado(usuarioId, role) {
+  return jwt.sign({ sub: usuarioId, role, nome: 'Token expirado' }, process.env.JWT_SECRET, {
+    expiresIn: -60,
+  });
 }

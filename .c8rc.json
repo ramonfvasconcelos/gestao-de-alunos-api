@@ -1,0 +1,21 @@
+{
+  "all": true,
+  "include": [
+    "src/**/*.js"
+  ],
+  "exclude": [
+    "src/server.js",
+    "src/database/seed.js"
+  ],
+  "reporter": [
+    "text",
+    "html",
+    "json-summary"
+  ],
+  "report-dir": "coverage",
+  "check-coverage": true,
+  "lines": 80,
+  "branches": 90,
+  "functions": 55,
+  "statements": 80
+}

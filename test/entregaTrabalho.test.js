@@ -2,7 +2,7 @@ import request from 'supertest';
 import { expect } from 'chai';
 import app from '../src/app.js';
 import { loginAdmin, loginAluno } from './helpers/auth.helper.js';
-import { carregarFixture, gerarAlunoUnico } from './helpers/dados.helper.js';
+import { carregarFixture, gerarAlunoUnico, removerAlunoEDados } from './helpers/dados.helper.js';
 
 // Data-Driven Testing: cada item do JSON gera um cenário completo de teste.
 const entregas = carregarFixture('entregas.json');
@@ -14,6 +14,11 @@ describe('Fluxo de entrega de trabalho pelo aluno', () => {
       let tokenAdmin;
       let tokenAluno;
       let alunoId;
+      let trabalhoEntregue;
+
+      after(async () => {
+        if (alunoId) await removerAlunoEDados(tokenAdmin, alunoId);
+      });
 
       it('deve logar como administrador', async () => {
         const resposta = await loginAdmin();
@@ -32,10 +37,13 @@ describe('Fluxo de entrega de trabalho pelo aluno', () => {
           .send(aluno);
 
         expect(resposta.status).to.equal(201);
-        expect(resposta.body).to.have.property('id');
-        expect(resposta.body.nome).to.equal(aluno.nome);
-        expect(resposta.body.email).to.equal(aluno.email);
-        expect(resposta.body.matricula).to.equal(aluno.matricula);
+        expect(resposta.body).to.have.property('id').that.is.a('string');
+        expect(resposta.body).to.include({
+          nome: aluno.nome,
+          email: aluno.email,
+          matricula: aluno.matricula,
+          role: 'aluno',
+        });
         expect(resposta.body).to.not.have.property('senha');
 
         alunoId = resposta.body.id;
@@ -48,8 +56,7 @@ describe('Fluxo de entrega de trabalho pelo aluno', () => {
           .send({ alunoId });
 
         expect(resposta.status).to.equal(201);
-        expect(resposta.body.alunoId).to.equal(alunoId);
-        expect(resposta.body.disciplinaId).to.equal(dados.disciplinaId);
+        expect(resposta.body).to.include({ alunoId, disciplinaId: dados.disciplinaId });
       });
 
       it('deve logar como o aluno cadastrado', async () => {
@@ -57,13 +64,13 @@ describe('Fluxo de entrega de trabalho pelo aluno', () => {
 
         expect(resposta.status).to.equal(200);
         expect(resposta.body).to.have.property('token');
-        expect(resposta.body.usuario.id).to.equal(alunoId);
-        expect(resposta.body.usuario.role).to.equal('aluno');
+        expect(resposta.body.usuario).to.include({ id: alunoId, role: 'aluno' });
 
         tokenAluno = resposta.body.token;
       });
 
       it('deve registrar a entrega do trabalho como aluno', async () => {
+        const antes = Date.now();
         const resposta = await request(app)
           .post(`/api/alunos/${alunoId}/trabalhos`)
           .set('Authorization', `Bearer ${tokenAluno}`)
@@ -71,13 +78,41 @@ describe('Fluxo de entrega de trabalho pelo aluno', () => {
 
         expect(resposta.status).to.equal(201);
         expect(resposta.headers['content-type']).to.include('application/json');
-        expect(resposta.body).to.have.property('id');
-        expect(resposta.body.alunoId).to.equal(alunoId);
-        expect(resposta.body.disciplinaId).to.equal(dados.disciplinaId);
-        expect(resposta.body.titulo).to.equal(dados.trabalho.titulo);
-        expect(resposta.body.descricao).to.equal(dados.trabalho.descricao);
-        expect(resposta.body.status).to.equal('entregue');
-        expect(resposta.body.nota).to.equal(null);
+
+        // Contrato: campos, valores e tipos da resposta
+        expect(resposta.body).to.include.all.keys('id', 'alunoId', 'disciplinaId', 'titulo', 'descricao', 'status', 'nota', 'feedback', 'dataEntrega');
+        expect(resposta.body).to.include({
+          alunoId,
+          disciplinaId: dados.disciplinaId,
+          titulo: dados.trabalho.titulo,
+          descricao: dados.trabalho.descricao,
+          status: 'entregue',
+          nota: null,
+          feedback: null,
+        });
+        expect(resposta.body.id).to.be.a('string').and.not.empty;
+        expect(Date.parse(resposta.body.dataEntrega)).to.be.within(antes - 5000, Date.now() + 5000);
+
+        trabalhoEntregue = resposta.body;
+      });
+
+      it('deve exibir a entrega na lista de trabalhos do aluno', async () => {
+        const resposta = await request(app)
+          .get(`/api/alunos/${alunoId}/trabalhos`)
+          .set('Authorization', `Bearer ${tokenAluno}`);
+
+        expect(resposta.status).to.equal(200);
+        expect(resposta.body).to.have.lengthOf(1);
+        expect(resposta.body[0]).to.deep.equal(trabalhoEntregue);
+      });
+
+      it('deve mostrar ao admin os mesmos dados da entrega', async () => {
+        const resposta = await request(app)
+          .get(`/api/admin/trabalhos/${trabalhoEntregue.id}`)
+          .set('Authorization', `Bearer ${tokenAdmin}`);
+
+        expect(resposta.status).to.equal(200);
+        expect(resposta.body).to.deep.equal(trabalhoEntregue);
       });
     });
   });

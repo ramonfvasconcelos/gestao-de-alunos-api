@@ -40,5 +40,19 @@
       "titulo": "API de Tarefas com Express",
       "descricao": "CRUD de tarefas com Node.js e Express."
     }
+  },
+  {
+    "cenario": "Aluna entrega trabalho com acentos, símbolos e emoji no título",
+    "aluno": {
+      "nome": "Ana Clara Gonçalves",
+      "email": "ana.clara@teste.com",
+      "matricula": "2026004",
+      "senha": "senha@2026"
+    },
+    "disciplinaId": "disciplina-matematica",
+    "trabalho": {
+      "titulo": "Função & Equação: exercícios nº 1–10 ✅",
+      "descricao": "Linha 1\nLinha 2 com acentuação: ç, ã, é, ü."
+    }
   }
 ]

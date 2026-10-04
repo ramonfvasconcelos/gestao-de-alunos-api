@@ -37,5 +37,20 @@ jobs:
       - name: Criar arquivo .env a partir do .env.example
         run: cp .env.example .env
 
-      - name: Executar testes
-        run: npm test
+      - name: Executar testes com cobertura
+        run: npm run test:coverage
+
+      - name: Publicar resumo da cobertura
+        if: always()
+        run: |
+          echo '### Cobertura de testes' >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          npx c8 report --reporter=text-summary >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Guardar relatório HTML de cobertura
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-cobertura
+          path: coverage/

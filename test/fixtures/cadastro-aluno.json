@@ -1,0 +1,31 @@
+{
+  "alunoValido": {
+    "nome": "Camila Rocha",
+    "email": "camila.rocha@teste.com",
+    "matricula": "2026040",
+    "senha": "senha123"
+  },
+  "erroObrigatorios": "Os campos \"nome\", \"email\", \"matricula\" e \"senha\" são obrigatórios.",
+  "erroDuplicado": "Já existe um aluno cadastrado com essa matrícula ou e-mail.",
+  "camposObrigatorios": ["nome", "email", "matricula", "senha"],
+  "invalidos": [
+    {
+      "descricao": "o e-mail não tiver @",
+      "alteracao": { "email": "email-sem-arroba" },
+      "statusEsperado": 400,
+      "bugConhecido": "BUG-04"
+    },
+    {
+      "descricao": "o e-mail terminar em @",
+      "alteracao": { "email": "email@" },
+      "statusEsperado": 400,
+      "bugConhecido": "BUG-04"
+    },
+    {
+      "descricao": "o nome tiver somente espaços",
+      "alteracao": { "nome": "   " },
+      "statusEsperado": 400,
+      "bugConhecido": "BUG-03"
+    }
+  ]
+}
