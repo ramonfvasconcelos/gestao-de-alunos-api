@@ -1,0 +1,44 @@
+[
+  {
+    "cenario": "Aluno de Matemática entrega uma lista de exercícios",
+    "aluno": {
+      "nome": "João Pereira",
+      "email": "joao.pereira@teste.com",
+      "matricula": "2026001",
+      "senha": "senha123"
+    },
+    "disciplinaId": "disciplina-matematica",
+    "trabalho": {
+      "titulo": "Lista de Exercícios 3",
+      "descricao": "Resolução dos exercícios 1 a 15 do capítulo 4."
+    }
+  },
+  {
+    "cenario": "Aluna de História entrega um resumo",
+    "aluno": {
+      "nome": "Maria Oliveira",
+      "email": "maria.oliveira@teste.com",
+      "matricula": "2026002",
+      "senha": "senha456"
+    },
+    "disciplinaId": "disciplina-historia",
+    "trabalho": {
+      "titulo": "Resumo - Brasil Colônia",
+      "descricao": "Resumo sobre o ciclo do açúcar e do ouro."
+    }
+  },
+  {
+    "cenario": "Aluno de Programação Web entrega um projeto",
+    "aluno": {
+      "nome": "Pedro Santos",
+      "email": "pedro.santos@teste.com",
+      "matricula": "2026003",
+      "senha": "senha789"
+    },
+    "disciplinaId": "disciplina-programacao-web",
+    "trabalho": {
+      "titulo": "API de Tarefas com Express",
+      "descricao": "CRUD de tarefas com Node.js e Express."
+    }
+  }
+]

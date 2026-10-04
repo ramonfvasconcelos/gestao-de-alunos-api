@@ -1,0 +1,35 @@
+{
+  "aluno": {
+    "nome": "Lucas Ferreira",
+    "email": "lucas.ferreira@teste.com",
+    "matricula": "2026010",
+    "senha": "senha123"
+  },
+  "disciplinaMatriculada": "disciplina-matematica",
+  "casos": [
+    {
+      "descricao": "o título não for informado",
+      "corpo": { "disciplinaId": "disciplina-matematica" },
+      "statusEsperado": 400,
+      "erroEsperado": "Os campos \"disciplinaId\" e \"titulo\" são obrigatórios."
+    },
+    {
+      "descricao": "a disciplina não for informada",
+      "corpo": { "titulo": "Trabalho sem disciplina" },
+      "statusEsperado": 400,
+      "erroEsperado": "Os campos \"disciplinaId\" e \"titulo\" são obrigatórios."
+    },
+    {
+      "descricao": "o aluno não estiver matriculado na disciplina",
+      "corpo": { "disciplinaId": "disciplina-historia", "titulo": "Trabalho de História" },
+      "statusEsperado": 409,
+      "erroEsperado": "O aluno não está matriculado nesta disciplina."
+    },
+    {
+      "descricao": "a disciplina não existir",
+      "corpo": { "disciplinaId": "disciplina-inexistente", "titulo": "Trabalho Fantasma" },
+      "statusEsperado": 404,
+      "erroEsperado": "Disciplina com id \"disciplina-inexistente\" não encontrada."
+    }
+  ]
+}

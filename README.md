@@ -260,3 +260,34 @@ curl -X POST http://localhost:3000/api/alunos/aluno-ana-souza/trabalhos \
 
 > Novos registros criados via API recebem ids no formato UUID (gerados com
 > `crypto.randomUUID()`), diferente dos ids legíveis usados nos dados fake acima.
+
+## Testes automatizados
+
+Testes de API com **Mocha**, **Supertest** e **Chai**, rodando na pipeline do **GitHub Actions**
+(`.github/workflows/tests.yml`) a cada push ou pull request na `main`.
+
+```bash
+cp .env.example .env   # variáveis usadas pelos testes (carregadas com dotenv)
+npm test
+```
+
+Estrutura:
+
+```
+test/
+  auth.test.js                    # login do admin (sucesso e senha inválida)
+  entregaTrabalho.test.js         # fluxo: login admin -> cadastra aluno -> matricula -> login aluno -> entrega trabalho
+  entregaTrabalhoInvalida.test.js # entregas inválidas (400, 404, 409, 403, 401)
+  fixtures/                       # massa de dados em JSON (Data-Driven Testing)
+    entregas.json
+    entregas-invalidas.json
+  helpers/
+    auth.helper.js                # login de Admin e de Aluno
+    dados.helper.js               # leitura dos JSON e geração de dados únicos
+  support/
+    setup.js                      # carrega o .env (dotenv)
+    hooks.js                      # fecha a conexão com o MongoDB ao final da suíte
+```
+
+Para adicionar um novo cenário de entrega, basta incluir um novo objeto em
+`test/fixtures/entregas.json` — o teste é gerado automaticamente.
